@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: demo_support
+    relative_path: urdf/demo.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/demo.srdf
+  CONFIG:
+    author_name: demo_instructors
+    author_email: demo@demo.com
+    generated_timestamp: 1580728881

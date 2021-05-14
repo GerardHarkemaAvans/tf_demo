@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="robot_model" >
+
+    <material name="blue">
+        <color rgba="0 0 0.8 1" />
+    </material>
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+    <material name="red">
+        <color rgba="0.8 0 0 1" />
+    </material>
+    <material name="green">
+        <color rgba="0 0.8 0 1" />
+    </material>
+    <material name="LightGrey">
+        <color rgba="0.7 0.7 0.7 1.0" />
+    </material>
+
+    <macro name="box_inertia" params="m x y z">
+            <inertia  ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0"
+                      iyy="${m*(x*x+z*z)/12}" iyz = "0"
+                      izz="${m*(x*x+z*z)/12}" /> 
+    </macro>
+
+	<xacro:property name="dummy_mass" value="100" />
+
+  <!-- Robot1 -->
+  <xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro"/>
+  <xacro:ur5_robot prefix="robot1_" joint_limited="true"/>
+
+  <!-- Vacuum Gripper1 -->
+  <xacro:include filename="$(find demo_support)/urdf/vacuum_gripper/vacuum_gripper.urdf.xacro"/>
+  <xacro:vacuum_gripper_urdf prefix="vacuum_gripper1_" joint_prefix="vacuum_gripper1_joint"/>
+  
+
+  <link name="world" />
+  <link name="baseplate_link">
+    <visual>
+      <origin xyz="0 0 0.0" />
+      <geometry>
+        <box size="1.1 0.7 0.03" />
+      </geometry>
+      <material name="LightGrey"/>
+    </visual>
+      <collision>
+		    <geometry>
+		     <box size="1.1 0.7 0.03"/>
+		    </geometry>
+      </collision>
+
+    <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+		<xacro:box_inertia m="${dummy_mass}" x="1.1" y="0.7" z="0.03"/>
+        <mass value="${dummy_mass}" />
+    </inertial>
+   </link>
+
+  <joint name="baseplate_joint" type="fixed">
+    <origin xyz="0 0 0" />
+    <parent link="world" />
+    <child link="baseplate_link" />
+  </joint>
+
+  <link name="mountingplate_link">
+    <visual>
+      <origin xyz="0 0 0.0" />
+      <geometry>
+        <box size="0.3 0.3 0.012" />
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="mountingplate_joint" type="fixed">
+    <origin xyz="0.0 -0.20 0.021" />
+    <parent link="baseplate_link" />
+    <child link="mountingplate_link" />
+  </joint>
+
+  <!-- Obstacle  -->
+<!--
+  <link name="obstacle_link">
+    <visual>
+      <origin xyz="0.005 0.02 0.1" />
+      <geometry>
+        <box size="0.01 0.4 0.2" />
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+
+  <joint name="obstacle_joint" type="fixed">
+    <origin xyz="0.0 0.15 0.021" />
+    <parent link="baseplate_link" />
+    <child link="obstacle_link" />
+  </joint>
+-->
+
+  
+  <!-- logical camera 1  model -->
+  <xacro:include filename="$(find demo_support)/urdf/logical_camera/logical_camera.urdf.xacro"/>
+  <xacro:logical_camera_urdf prefix="logical_camera1_" logical_camera_parent="world">
+    <origin xyz="0 0 1.0" rpy="0 1.5708 1.5708"/>
+  </xacro:logical_camera_urdf>
+
+
+  <!-- robot1 to pedestal. -->
+  <joint name="robot1_to_mountingplate_link" type="fixed">
+  <origin xyz="0.0 0.0 0.01" rpy="0 0 0" />
+  <parent link="mountingplate_link" />
+  <child link="robot1_base_link" />
+  </joint>
+
+  <!-- gripper1 to robot1. -->
+  <joint name="gripper1_to_robot1" type="fixed">
+    <parent link="robot1_tool0" />
+    <child link="vacuum_gripper1_base_link" />
+  </joint>
+
+
+</robot>
