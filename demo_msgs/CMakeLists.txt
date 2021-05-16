@@ -7,19 +7,19 @@ find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs std_msgs trajectory
 ################################################
 
 ## Generate messages in the 'msg' folder
-add_message_files(DIRECTORY msg
-  FILES
-)
+#add_message_files(DIRECTORY msg
+#  FILES
+#)
 
 ## Generate messages in the 'srv' folder
-add_service_files(DIRECTORY srv
-  FILES
-)
+#add_service_files(DIRECTORY srv
+#  FILES
+#)
 
 ## Generate messages in the 'action' folder
-add_action_files(DIRECTORY action
-  FILES
-)
+#add_action_files(DIRECTORY action
+#  FILES
+#)
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
