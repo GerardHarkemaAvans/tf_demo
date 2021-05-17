@@ -39,7 +39,7 @@
 
   <!-- unpause gazebo -->
   <node pkg="demo_utilities" type="timed_roslaunch.sh" name="unpause_gazebo" output="screen"
-    args="3 demo_gazebo unpause.launch" />
+    args="10 demo_gazebo unpause.launch" />
 
   <node pkg="demo_utilities" type="timed_roslaunch.sh" name="timed_roslaunch_parts" output="screen"
     args="7 demo_gazebo spawn_parts.launch" />
