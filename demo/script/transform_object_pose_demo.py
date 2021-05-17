@@ -59,12 +59,28 @@ def logical_camera_callback(data):
     object_pose.pose.orientation.w = data.models[-1].pose.orientation.w
     while True:
       try:
-        object_world_pose = tf_buffer.transform(object_pose, "world")
+        object_robot1_base_pose = tf_buffer.transform(object_pose, "robot1_base")
         break
       except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
         continue
-    rospy.loginfo('Pose of the object in the world reference frame is:\n %s', object_world_pose)
+    rospy.loginfo('Pose of the object in the robo1_base reference frame is:\n %s', object_robot1_base_pose)
     rospy.loginfo('Pose of the object in the logical camera reference frame is:\n %s', object_pose)
+    
+    
+    # Broadcast transform
+    object_transform = geometry_msgs.msg.TransformStamped()
+    object_transform.header.stamp = rospy.Time.now()
+    object_transform.header.frame_id = "robot1_base"
+    object_transform.child_frame_id = "part_pose"
+    object_transform.transform.translation = object_robot1_base_pose.pose.position
+    object_transform.transform.rotation = object_robot1_base_pose.pose.orientation
+    rospy.loginfo(object_transform)
+    broadcaster = tf2_ros.StaticTransformBroadcaster()
+    broadcaster.sendTransform(object_transform)
+    while 1:
+      # Do nothing.
+      rospy.sleep(1)
+    
     rospy.signal_shutdown('Successfully transformed pose.')
   else:
     # Do nothing.
