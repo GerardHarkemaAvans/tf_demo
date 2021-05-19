@@ -74,7 +74,7 @@ def logical_camera_callback(data):
     object_transform.child_frame_id = "part_pose"
     object_transform.transform.translation = object_robot1_base_pose.pose.position
     object_transform.transform.rotation = object_robot1_base_pose.pose.orientation
-    rospy.loginfo('New transform:\n %s', object_transform)
+    #rospy.loginfo('New transform:\n %s', object_transform)
     broadcaster = tf2_ros.StaticTransformBroadcaster()
     broadcaster.sendTransform(object_transform)
     while 1:
